@@ -8,15 +8,15 @@
 //------------------------------------------------------------------------------
 public static class InputComponentsLookup {
 
-    public const int JoystickInput = 0;
 
-    public const int TotalComponents = 1;
+
+    public const int TotalComponents = 0;
 
     public static readonly string[] componentNames = {
-        "JoystickInput"
+
     };
 
     public static readonly System.Type[] componentTypes = {
-        typeof(JoystickInputComponent)
+
     };
 }
