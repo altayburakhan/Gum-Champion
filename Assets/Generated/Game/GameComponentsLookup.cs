@@ -8,39 +8,42 @@
 //------------------------------------------------------------------------------
 public static class GameComponentsLookup {
 
-    public const int Camera = 0;
-    public const int Collision = 1;
-    public const int Damage = 2;
-    public const int DelayedDestroy = 3;
-    public const int Direction = 4;
-    public const int EnemyCmp = 5;
-    public const int Enemy = 6;
-    public const int Gum = 7;
-    public const int GumSkill = 8;
-    public const int HasCollided = 9;
-    public const int HealthComp = 10;
-    public const int Health = 11;
-    public const int HitEnemies = 12;
-    public const int Interactive = 13;
-    public const int IsDestroyed = 14;
-    public const int IsDestryComp = 15;
-    public const int IsTargetable = 16;
-    public const int LastDamageTime = 17;
-    public const int Movable = 18;
-    public const int PlayerCmp = 19;
-    public const int Player = 20;
-    public const int Positin = 21;
-    public const int Position = 22;
-    public const int Prefab = 23;
-    public const int Spawn = 24;
-    public const int Speed = 25;
-    public const int Target = 26;
-    public const int Velocity = 27;
-    public const int View = 28;
+    public const int BuffDrop = 0;
+    public const int Camera = 1;
+    public const int Collision = 2;
+    public const int Damage = 3;
+    public const int DelayedDestroy = 4;
+    public const int Direction = 5;
+    public const int EnemyCmp = 6;
+    public const int Enemy = 7;
+    public const int EnemyDrops = 8;
+    public const int Gum = 9;
+    public const int GumSkill = 10;
+    public const int HasCollided = 11;
+    public const int HealthComp = 12;
+    public const int Health = 13;
+    public const int HitEnemies = 14;
+    public const int Interactive = 15;
+    public const int IsDestroyed = 16;
+    public const int IsDestryComp = 17;
+    public const int IsTargetable = 18;
+    public const int LastDamageTime = 19;
+    public const int Movable = 20;
+    public const int PlayerCmp = 21;
+    public const int Player = 22;
+    public const int Positin = 23;
+    public const int Position = 24;
+    public const int Prefab = 25;
+    public const int Spawn = 26;
+    public const int Speed = 27;
+    public const int Target = 28;
+    public const int Velocity = 29;
+    public const int View = 30;
 
-    public const int TotalComponents = 29;
+    public const int TotalComponents = 31;
 
     public static readonly string[] componentNames = {
+        "BuffDrop",
         "Camera",
         "Collision",
         "Damage",
@@ -48,6 +51,7 @@ public static class GameComponentsLookup {
         "Direction",
         "EnemyCmp",
         "Enemy",
+        "EnemyDrops",
         "Gum",
         "GumSkill",
         "HasCollided",
@@ -73,6 +77,7 @@ public static class GameComponentsLookup {
     };
 
     public static readonly System.Type[] componentTypes = {
+        typeof(BuffDropComponent),
         typeof(CameraComponent),
         typeof(CollisionComponent),
         typeof(DamageComponent),
@@ -80,6 +85,7 @@ public static class GameComponentsLookup {
         typeof(DirectionComponent),
         typeof(EnemyCmp),
         typeof(EnemyComponent),
+        typeof(EnemyDropsComponent),
         typeof(GumComponent),
         typeof(GumSkill),
         typeof(HasCollidedComponent),

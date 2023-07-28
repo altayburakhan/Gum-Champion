@@ -24,7 +24,11 @@ public class EnemyCmp : IComponent
     public float health;
     public Vector3 position;
 }
-
+[Game]
+public class EnemyDropsComponent : IComponent
+{
+    public bool dropsBuff;
+}
 
 
 

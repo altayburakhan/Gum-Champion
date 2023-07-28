@@ -1,5 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
+
 using UnityEngine;
 using Entitas;
 
@@ -38,11 +37,6 @@ using Entitas;
         }
     }
 }*/
-using UnityEngine;
-using Entitas;
-
-using UnityEngine;
-using Entitas;
 
 /*public class GumMoveSystem : IExecuteSystem
 {
@@ -103,11 +97,7 @@ using Entitas;
                viewportPosition.z >= 0;
     }
 }*/
-using UnityEngine;
-using Entitas;
 
-using UnityEngine;
-using Entitas;
 
 public class GumMoveSystem : IExecuteSystem
 {
