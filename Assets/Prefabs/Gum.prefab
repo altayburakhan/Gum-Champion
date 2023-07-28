@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 8258797803338911569}
   - component: {fileID: 7057613190701063469}
   m_Layer: 0
-  m_Name: FrostBolt
+  m_Name: Gum
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

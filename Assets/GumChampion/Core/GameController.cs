@@ -1,11 +1,10 @@
-
 using Entitas;
 using UnityEngine;
 
 public class GameController : MonoBehaviour
 {
     [SerializeField] private GameObject enemyPrefab;// Serialized field to assign the Enemy prefab in the Unity Inspector
-    [SerializeField] private GameObject frostboltPrefab;// Serialized field to assign the Frostbolt prefab in the Unity Inspector
+    [SerializeField] private GameObject gumPrefab;// Serialized field to assign the Gum prefab in the Unity Inspector
     public GameObject player; // Reference to the Player GameObject
     private Systems _systems; // Reference to the Systems object that will manage all game systems
     public Joystick joystick; // Reference to the Joystick component for player input
@@ -19,8 +18,8 @@ public class GameController : MonoBehaviour
             .Add(new RenderPositionSystem(contexts)) 
             .Add(new SpawnSystem(contexts, enemyPrefab))
             .Add(new ChaseSystem(contexts))
-            .Add(new GumSpawnSystem(contexts, frostboltPrefab)) // Add this line
-            .Add(new MoveFrostboltSystem(contexts))
+            .Add(new GumSpawnSystem(contexts, gumPrefab)) // Add this line
+            .Add(new GumMoveSystem(contexts))
             .Add(new DamageSystem(contexts))
             .Add(new PlayerDamageSystem(contexts));
        _systems.Initialize();

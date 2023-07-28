@@ -85,6 +85,5 @@ public class SpawnSystem : IExecuteSystem
                viewportPosition.y >= 0 && viewportPosition.y <= 1 &&
                viewportPosition.z >= 0; // Check if the position is in front of the camera
     }
-
     
 }
