@@ -1,3 +1,4 @@
+
 using System.Collections.Generic;
 using UnityEngine;
 using Entitas;
@@ -6,6 +7,8 @@ public class DamageSystem : IExecuteSystem
 {
     private readonly IGroup<GameEntity> _gums;
     private readonly IGroup<GameEntity> _enemies;
+    private readonly IGroup<GameEntity> _buffdrops;
+    private IGroup<GameEntity> _players;
     private readonly GameContext _context;
     private readonly float _dropChance = 0.5f; // 5% chance to drop an attribute
 
@@ -13,7 +16,9 @@ public class DamageSystem : IExecuteSystem
     {
         _gums = contexts.game.GetGroup(GameMatcher.Gum);
         _enemies = contexts.game.GetGroup(GameMatcher.Enemy);
+        _buffdrops = contexts.game.GetGroup(GameMatcher.BuffDrop);
         _context = contexts.game;
+        _players = _context.GetGroup(GameMatcher.Player);
     }
 
     public void Execute()
@@ -50,18 +55,60 @@ public class DamageSystem : IExecuteSystem
                 }
             }
         }
-    }
+        foreach (var player in _players.GetEntities())
+        {
+            foreach (var buff in _buffdrops.GetEntities())
+            {
+                if (IsColliding(player, buff))
+                {
+                    // Apply the buff effect based on the buff type
+                    switch (buff.buffDrop.buffType)
+                    {
+                        case BuffType.DamageIncrease:
+                            var gumEntities = _context.GetGroup(GameMatcher.Gum).GetEntities();
+                            if (gumEntities.Length > 0)
+                            {
+                                var randomGumEntity = gumEntities[Random.Range(0, gumEntities.Length)];
+                                var gum = randomGumEntity.gum;
+                                gum.damage += 5;
+                            }
+                            break;
 
-    private bool IsColliding(GameEntity gum, GameEntity enemy)
+                        case BuffType.Slowdown:
+                            var enemyEntities = _context.GetGroup(GameMatcher.Enemy).GetEntities();
+                            foreach (var enemyEntity in enemyEntities)
+                            {
+                                var speed = enemyEntity.speed;
+                                speed.value -= 1f; // Decrease the enemy's speed by 1
+                            }
+                            break;
+
+                        // Add cases for other buff types if needed
+
+                        default:
+                            break;
+                    }
+
+                    // Destroy the buff entity and its associated GameObject
+                    GameObject.Destroy(buff.view.gameObject);
+                    buff.Destroy();
+                }
+            }
+        }
+        
+    }
+    
+    private bool IsColliding(GameEntity player, GameEntity buff)
     {
+        // Check if the positions of the player and buff entities are close enough to be considered colliding
         float collisionThreshold = 1.0f;
-        Vector3 gumPosition = gum.position.value;
-        Vector3 enemyPosition = enemy.position.value;
-        float distance = Vector3.Distance(gumPosition, enemyPosition);
+        Vector3 playerPosition = player.position.value;
+        Vector3 buffPosition = buff.position.value;
+        float distance = Vector3.Distance(playerPosition, buffPosition);
         return distance < collisionThreshold;
     }
-
-    private void DropRandomAttribute(Vector3 position)
+    
+    /*private void DropRandomAttribute(Vector3 position)
     {
         BuffType[] buffTypes = (BuffType[])System.Enum.GetValues(typeof(BuffType));
         BuffType randomBuffType = buffTypes[Random.Range(0, buffTypes.Length)];
@@ -76,26 +123,74 @@ public class DamageSystem : IExecuteSystem
         {
             GameObject buffObject = GameObject.Instantiate(prefab, position, Quaternion.identity);
             buffEntity.AddView(buffObject);
+
+            // Apply the buff effect based on the buff type
+            switch (randomBuffType)
+            {
+                case BuffType.DamageIncrease:
+                    var gumEntities = _context.GetGroup(GameMatcher.Gum).GetEntities();
+                    if (gumEntities.Length > 0)
+                    {
+                        var randomGumEntity = gumEntities[Random.Range(0, gumEntities.Length)];
+                        var gum = randomGumEntity.gum;
+                        gum.damage += 5;
+                    }
+                    break;
+
+                case BuffType.Slowdown:
+                    var enemyEntities = _context.GetGroup(GameMatcher.Enemy).GetEntities();
+                    foreach (var enemyEntity in enemyEntities)
+                    {
+                        var speed = enemyEntity.speed;
+                        speed.value -= 0.1f; // Decrease the enemy's speed by 1
+                    }
+                    break;
+
+                // Add cases for other buff types if needed
+
+                default:
+                    break;
+            }
+        }
+    }*/
+    private void DropRandomAttribute(Vector3 position)
+    {
+        BuffType[] buffTypes = (BuffType[])System.Enum.GetValues(typeof(BuffType));
+        BuffType randomBuffType = buffTypes[Random.Range(0, buffTypes.Length)];
+
+        var buffEntity = _context.CreateEntity();
+        buffEntity.AddPosition(position);
+        buffEntity.AddBuffDrop(randomBuffType);
+        buffEntity.AddCollectible(true);
+
+        // Create the prefab based on the buff type
+        GameObject prefab = GetPrefabForBuffType(randomBuffType);
+        if (prefab != null)
+        {
+            GameObject buffObject = GameObject.Instantiate(prefab, position, Quaternion.identity);
+            buffEntity.AddView(buffObject);
         }
     }
+
+
 
     private GameObject GetPrefabForBuffType(BuffType buffType)
     {
         // Map each buff type to its corresponding prefab
         switch (buffType)
         {
-            case BuffType.AreaDamage:
-                return Resources.Load<GameObject>("AreaBuff");
-            case BuffType.Knockback:
-                return Resources.Load<GameObject>("KnockBuff");
-            case BuffType.Slowdown:
-                return Resources.Load<GameObject>("SlowBuff");
             case BuffType.DamageIncrease:
                 return Resources.Load<GameObject>("DamageBuff");
-           
+
+            case BuffType.Slowdown:
+                return Resources.Load<GameObject>("SlowBuff");
+
             default:
                 return null; // Return null if no prefab is found for the buff type
         }
     }
 
 }
+
+
+

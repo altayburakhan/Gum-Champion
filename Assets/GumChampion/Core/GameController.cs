@@ -22,20 +22,21 @@ public class GameController : MonoBehaviour
             .Add(new GumMoveSystem(contexts))
             .Add(new DamageSystem(contexts))
             .Add(new PlayerDamageSystem(contexts));
+        
        _systems.Initialize();
        
         var playerEntity = contexts.game.CreateEntity();
         var cameraEntity = contexts.game.CreateEntity();
         var enemyEntity = contexts.game.CreateEntity();
-        var frostEntity = contexts.game.CreateEntity();
+        var gumEntity = contexts.game.CreateEntity();
         playerEntity.AddPosition(Vector3.zero);
         playerEntity.AddSpeed(5f);
         playerEntity.isPlayer = true;
         playerEntity.AddView(player);
-        frostEntity.AddTarget(enemyEntity);
+        gumEntity.AddTarget(enemyEntity);
         cameraEntity.AddCamera(Camera.main);
         enemyEntity.AddTarget(playerEntity);
-        frostEntity.isHasCollided = true;
+        gumEntity.isHasCollided = true;
         playerEntity.AddHealthComp(100);
     }
     
