@@ -20,28 +20,29 @@ public static class GameComponentsLookup {
     public const int EnemyDrops = 9;
     public const int Gum = 10;
     public const int GumSkill = 11;
-    public const int HasCollided = 12;
-    public const int HealthComp = 13;
-    public const int Health = 14;
-    public const int HitEnemies = 15;
-    public const int Interactive = 16;
-    public const int IsDestroyed = 17;
-    public const int IsDestryComp = 18;
-    public const int IsTargetable = 19;
-    public const int LastDamageTime = 20;
-    public const int Movable = 21;
-    public const int PlayerCmp = 22;
-    public const int Player = 23;
-    public const int Positin = 24;
-    public const int Position = 25;
-    public const int Prefab = 26;
-    public const int Spawn = 27;
-    public const int Speed = 28;
-    public const int Target = 29;
-    public const int Velocity = 30;
-    public const int View = 31;
+    public const int GumTypes = 12;
+    public const int HasCollided = 13;
+    public const int HealthComp = 14;
+    public const int Health = 15;
+    public const int HitEnemies = 16;
+    public const int Interactive = 17;
+    public const int IsDestroyed = 18;
+    public const int IsDestryComp = 19;
+    public const int IsTargetable = 20;
+    public const int LastDamageTime = 21;
+    public const int Movable = 22;
+    public const int PlayerCmp = 23;
+    public const int Player = 24;
+    public const int Positin = 25;
+    public const int Position = 26;
+    public const int Prefab = 27;
+    public const int Spawn = 28;
+    public const int Speed = 29;
+    public const int Target = 30;
+    public const int Velocity = 31;
+    public const int View = 32;
 
-    public const int TotalComponents = 32;
+    public const int TotalComponents = 33;
 
     public static readonly string[] componentNames = {
         "BuffDrop",
@@ -56,6 +57,7 @@ public static class GameComponentsLookup {
         "EnemyDrops",
         "Gum",
         "GumSkill",
+        "GumTypes",
         "HasCollided",
         "HealthComp",
         "Health",
@@ -91,6 +93,7 @@ public static class GameComponentsLookup {
         typeof(EnemyDropsComponent),
         typeof(GumComponent),
         typeof(GumSkill),
+        typeof(GumTypesComponent),
         typeof(HasCollidedComponent),
         typeof(HealthComp),
         typeof(HealthComponent),

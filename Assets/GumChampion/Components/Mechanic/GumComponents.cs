@@ -16,9 +16,8 @@ public sealed class GumComponent : IComponent
     public float damage;
 }
 
-[Game]
-public class GumSpeedComponent : IComponent
+public class GumTypesComponent : IComponent
 {
-    public float speedDecrease; 
-    
+    public float slowdownAmount;
 }
+

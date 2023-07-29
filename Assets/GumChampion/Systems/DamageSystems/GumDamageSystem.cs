@@ -1,4 +1,3 @@
-
 using System.Collections.Generic;
 using UnityEngine;
 using Entitas;
@@ -11,6 +10,7 @@ public class DamageSystem : IExecuteSystem
     private IGroup<GameEntity> _players;
     private readonly GameContext _context;
     private readonly float _dropChance = 0.5f; // 5% chance to drop an attribute
+    private int slowAmount;
 
     public DamageSystem(Contexts contexts)
     {
@@ -35,6 +35,7 @@ public class DamageSystem : IExecuteSystem
                 if (IsColliding(gum, enemy) && !gum.hitEnemies.value.Contains(enemy))
                 {
                     enemy.ReplaceHealthComp(enemy.healthComp.value - gum.gum.damage);
+                    enemy.ReplaceSpeed(enemy.speed.value - slowAmount);
 
                     if (enemy.healthComp.value <= 0)
                     {
@@ -52,6 +53,20 @@ public class DamageSystem : IExecuteSystem
                     }
 
                     gum.hitEnemies.value.Add(enemy);
+
+                    // Apply the gum effect based on the gum type
+                    /*switch (gum.gum.buffType)
+                    {
+                        case BuffType.Slowdown:
+                            var speed = enemy.speed;
+                            speed.value -= gum.gum.slowdownAmount; // Decrease the enemy's speed by the specified amount
+                            break;
+
+                        // Add cases for other buff types if needed
+
+                        default:
+                            break;
+                    }*/
                 }
             }
         }
@@ -75,13 +90,10 @@ public class DamageSystem : IExecuteSystem
                             break;
 
                         case BuffType.Slowdown:
-                            var enemyEntities = _context.GetGroup(GameMatcher.Enemy).GetEntities();
-                            foreach (var enemyEntity in enemyEntities)
-                            {
-                                var speed = enemyEntity.speed;
-                                speed.value -= 1f; // Decrease the enemy's speed by 1
-                            }
-                            break;
+                            
+                                slowAmount++;
+
+                                break;
 
                         // Add cases for other buff types if needed
 
@@ -108,51 +120,6 @@ public class DamageSystem : IExecuteSystem
         return distance < collisionThreshold;
     }
     
-    /*private void DropRandomAttribute(Vector3 position)
-    {
-        BuffType[] buffTypes = (BuffType[])System.Enum.GetValues(typeof(BuffType));
-        BuffType randomBuffType = buffTypes[Random.Range(0, buffTypes.Length)];
-
-        var buffEntity = _context.CreateEntity();
-        buffEntity.AddPosition(position);
-        buffEntity.AddBuffDrop(randomBuffType);
-
-        // Create the prefab based on the buff type
-        GameObject prefab = GetPrefabForBuffType(randomBuffType);
-        if (prefab != null)
-        {
-            GameObject buffObject = GameObject.Instantiate(prefab, position, Quaternion.identity);
-            buffEntity.AddView(buffObject);
-
-            // Apply the buff effect based on the buff type
-            switch (randomBuffType)
-            {
-                case BuffType.DamageIncrease:
-                    var gumEntities = _context.GetGroup(GameMatcher.Gum).GetEntities();
-                    if (gumEntities.Length > 0)
-                    {
-                        var randomGumEntity = gumEntities[Random.Range(0, gumEntities.Length)];
-                        var gum = randomGumEntity.gum;
-                        gum.damage += 5;
-                    }
-                    break;
-
-                case BuffType.Slowdown:
-                    var enemyEntities = _context.GetGroup(GameMatcher.Enemy).GetEntities();
-                    foreach (var enemyEntity in enemyEntities)
-                    {
-                        var speed = enemyEntity.speed;
-                        speed.value -= 0.1f; // Decrease the enemy's speed by 1
-                    }
-                    break;
-
-                // Add cases for other buff types if needed
-
-                default:
-                    break;
-            }
-        }
-    }*/
     private void DropRandomAttribute(Vector3 position)
     {
         BuffType[] buffTypes = (BuffType[])System.Enum.GetValues(typeof(BuffType));
@@ -172,8 +139,6 @@ public class DamageSystem : IExecuteSystem
         }
     }
 
-
-
     private GameObject GetPrefabForBuffType(BuffType buffType)
     {
         // Map each buff type to its corresponding prefab
@@ -189,8 +154,4 @@ public class DamageSystem : IExecuteSystem
                 return null; // Return null if no prefab is found for the buff type
         }
     }
-
 }
-
-
-
