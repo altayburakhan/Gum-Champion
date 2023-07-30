@@ -35,9 +35,9 @@ public class SpawnSystem : IExecuteSystem
             
             enemy.AddPrefab(_enemyPrefab);// Add the enemy prefab to the enemy entity
             enemy.AddPosition(GetRandomPositionOutsideViewport(camera));// Add a position to the enemy entity, the position is randomly generated outside the viewport
-            enemy.AddEnemy(50, 10);// Add an Enemy component to the enemy entity with a health of 50 and damage of 10
+            enemy.AddEnemy(50, 20);// Add an Enemy component to the enemy entity with a health of 50 and damage of 10
             enemy.AddHealthComp(50);// Add a HealthComponent to the enemy entity with a health value of 50
-            enemy.AddDamage(10);// Add a DamageComponent to the enemy entity with a damage value of 10
+            enemy.AddDamage(20);// Add a DamageComponent to the enemy entity with a damage value of 10
             var enemyGameObject = GameObject.Instantiate(enemy.prefab.prefab, enemy.position.value, Quaternion.identity);// Instantiate a new GameObject from the enemy prefab at the enemy's position with no rotation
             enemy.AddView(enemyGameObject); // Add a ViewComponent that references the enemy GameObject
             enemy.AddSpeed(2f); // Add a SpeedComponent with a speed of 5

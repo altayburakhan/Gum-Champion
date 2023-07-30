@@ -34,7 +34,7 @@ public class GumSpawnSystem : IExecuteSystem
             gum.AddPrefab(_gumPrefab); // Add the frostbolt prefab to the frostbolt entity
             gum.AddPosition(player.position.value); // Set the position of the frostbolt to the player's position
             gum.AddSpeed(10f); // Set the speed of the frostbolt
-            gum.AddGum(50,0f,0f); // Add a Frostbolt component with a damage of 50
+            gum.AddGum(40,0f,0f); // Add a Frostbolt component with a damage of 50
             var frostboltGameObject = GameObject.Instantiate(gum.prefab.prefab, gum.position.value, Quaternion.identity); // Instantiate the frostbolt GameObject
             var direction = (closestEnemy.position.value - player.position.value).normalized; // Calculate the direction towards the closest enemy
             gum.AddDirection(direction); // Add the calculated direction to the frostbolt entity

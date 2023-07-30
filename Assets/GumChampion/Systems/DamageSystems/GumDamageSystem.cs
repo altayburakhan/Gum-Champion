@@ -9,9 +9,9 @@ public class DamageSystem : IExecuteSystem
     private readonly IGroup<GameEntity> _buffdrops;
     private IGroup<GameEntity> _players;
     private readonly GameContext _context;
-    private readonly float _dropChance = 0.05f; // 5% chance to drop an attribute
-    private int slowAmount;
-    private float KnockbackAmount;
+    private readonly float _dropChance = 0.5f; // 5% chance to drop an attribute
+    //private int slowAmount;
+    //private float KnockbackAmount;
 
     public DamageSystem(Contexts contexts)
     {
@@ -38,12 +38,12 @@ public class DamageSystem : IExecuteSystem
                 if (IsColliding(gum, enemy) && !gum.hitEnemies.value.Contains(enemy))
                 {
                     enemy.ReplaceHealthComp(enemy.healthComp.value - gum.gum.damage);
-                    var (speed, position) = (enemy.speed.value, enemy.position.value);
-                    var direction = position - gum.position.value;
+                   // var (speed, position) = (enemy.speed.value, enemy.position.value);
+                    var direction = enemy.position.value - gum.position.value;
                     direction.Normalize();
-                    var knockbackForce = gum.gum.knockbackForce;
-                    enemy.speed.value -= gum.gum.slowdownAmount; // Decrease the enemy's speed by the gum's speed decrease value
-                    enemy.position.value += direction * knockbackForce; // Apply the knockback force to the enemy's position
+                    //var knockbackForce = gum.gum.knockbackForce;
+                   // enemy.speed.value -= gum.gum.slowdownAmount; // Decrease the enemy's speed by the gum's speed decrease value
+                   // enemy.position.value += direction * knockbackForce; // Apply the knockback force to the enemy's position
                     
                     if (enemy.healthComp.value <= 0)
                     {
@@ -77,18 +77,11 @@ public class DamageSystem : IExecuteSystem
                     {
                         case BuffType.DamageIncrease:
                             var gumEntities = _context.GetGroup(GameMatcher.Gum).GetEntities();
-                            if (gumEntities.Length > 0)
+                            foreach (var gumEntity in gumEntities)
                             {
-                                var randomGumEntity = gumEntities[Random.Range(0, gumEntities.Length)];
-                                var gum = randomGumEntity.gum;
+                                var gum = gumEntity.gum;
                                 gum.damage += 5;
                             }
-                            break;
-
-                       
-                        // Add cases for other buff types if needed
-
-                        default:
                             break;
                     }
 
@@ -128,42 +121,6 @@ public class DamageSystem : IExecuteSystem
             buffEntity.AddView(buffObject);
 
             // Apply the buff effect based on the buff type
-            switch (randomBuffType)
-            {
-                case BuffType.DamageIncrease:
-                    var gumEntities = _context.GetGroup(GameMatcher.Gum).GetEntities();
-                    if (gumEntities.Length > 0)
-                    {
-                        var randomGumEntity = gumEntities[Random.Range(0, gumEntities.Length)];
-                        var gum = randomGumEntity.gum;
-                        gum.damage += 5;
-                    }
-                    break;
-
-                case BuffType.Slowdown:
-                    var gumSlowEntity = _context.GetGroup(GameMatcher.Gum).GetSingleEntity();
-                    if (gumSlowEntity != null)
-                    {
-                        var gumComponent = gumSlowEntity.gum;
-                        gumComponent.knockbackForce += 10f; // Increase the gum's knockback force by 10
-                    }
-
-                    break;
-
-                case BuffType.Knockback:
-                    var gumKnockEntity = _context.GetGroup(GameMatcher.Gum).GetSingleEntity();
-                    if (gumKnockEntity != null)
-                    {
-                        var gum = gumKnockEntity.gum;
-                        gum.knockbackForce += 10f; // Increase the gum's knockback force by 10
-                    }
-                    break;
-
-                // Add cases for other buff types if needed
-
-                default:
-                    break;
-            }
         }
     }
 
@@ -177,11 +134,11 @@ public class DamageSystem : IExecuteSystem
             case BuffType.DamageIncrease:
                 return Resources.Load<GameObject>("DamageBuff");
 
-            case BuffType.Slowdown:
+            /*case BuffType.Slowdown:
                 return Resources.Load<GameObject>("SlowBuff");
             
             case BuffType.Knockback:
-                return Resources.Load<GameObject>("KnockBuff");
+                return Resources.Load<GameObject>("KnockBuff");*/
             default:
                 return null; // Return null if no prefab is found for the buff type
         }
