@@ -10,12 +10,14 @@ public class SpawnSystem : IExecuteSystem
     private float _spawnTimer = 0;// Declare a private variable to hold the spawn timer
     private float _spawnInterval = 4;// Declare a private variable to hold the spawn interval (in seconds)
     private int _spawnCount = 0;// Declare a private variable to hold the spawn count
+    private IGroup<GameEntity> _players;
     
     public SpawnSystem(Contexts contexts, GameObject enemyPrefab)// Constructor for the SpawnSystem class
     {
         _context = contexts.game;        // Initialize the GameContext from the provided contexts
         _cameras = _context.GetGroup(GameMatcher.Camera);// Get a group of all entities that match the Camera component
         _enemyPrefab = enemyPrefab;// Initialize the enemy prefab from the provided prefab
+        _players = _context.GetGroup(GameMatcher.AllOf(GameMatcher.Player, GameMatcher.Position, GameMatcher.Speed));
     }
 
     public void Execute()
@@ -44,6 +46,7 @@ public class SpawnSystem : IExecuteSystem
             if (player != null)// If the player entity exists
             {
                 enemy.AddTarget(player);// Add a Chase component to the enemy, setting the player as the target
+               
             }
             
             _spawnCount++;// Increment the spawn count
@@ -52,7 +55,8 @@ public class SpawnSystem : IExecuteSystem
             {
                 _spawnInterval -= 0.5f;  // Decrease the spawn interval by 0.5
             }
-
+           
+            
         }
     }
     private Vector3 GetRandomPositionOutsideViewport(Camera camera)// Method to get a random position outside the viewport
@@ -66,6 +70,11 @@ public class SpawnSystem : IExecuteSystem
                 Random.Range(-20, 40)); // Adjust these values to fit your game
             
             position = new Vector3(camera.transform.position.x, 0, camera.transform.position.z) + randomVector;// Calculate the position by adding the random vector to the camera's position
+           
+                // Access the Rotation component
+                
+                // Use the rotationComponent as needed
+            
             
         } while (IsInsideViewport(camera, position));// Repeat the process until the position is outside the viewport
         
