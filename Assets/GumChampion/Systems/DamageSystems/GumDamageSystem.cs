@@ -9,7 +9,7 @@ public class DamageSystem : IExecuteSystem
     private readonly IGroup<GameEntity> _buffdrops;
     private IGroup<GameEntity> _players;
     private readonly GameContext _context;
-    private readonly float _dropChance = 0.5f; // 5% chance to drop an attribute
+    private readonly float _dropChance = 0.05f; // 5% chance to drop an attribute
     private int slowAmount;
     private float KnockbackAmount;
 
