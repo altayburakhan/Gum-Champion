@@ -36,7 +36,8 @@ public class DamageSystem : IExecuteSystem
                     enemy.ReplaceHealthComp(enemy.healthComp.value - gum.gum.damage);
                     var direction = enemy.position.value - gum.position.value;
                     direction.Normalize();
-
+                    enemy.speed.value -= gum.gum.slowdownAmount;
+                    enemy.position.value = enemy.position.value + direction * gum.gum.knockbackForce;
                     if (enemy.healthComp.value <= 0)
                     {
                         float random = Random.value;
@@ -52,6 +53,10 @@ public class DamageSystem : IExecuteSystem
                     }
 
                     gum.hitEnemies.value.Add(enemy);
+                   
+                    
+                        /*enemy.ReplaceSlowDownBuff(enemy.speed.value - gum.gum.slowdownAmount);*/
+                   
                 }
             }
         }
@@ -62,6 +67,7 @@ public class DamageSystem : IExecuteSystem
             {
                 if (IsColliding(player, buff))
                 {
+                    // Apply the buff effect based on the buff type
                     switch (buff.buffDrop.buffType)
                     {
                         case BuffType.DamageIncrease:
@@ -77,7 +83,7 @@ public class DamageSystem : IExecuteSystem
                         case BuffType.Slowdown:
                             if (player.hasSlowDownBuff)
                             {
-                                player.ReplaceSlowDownBuff(player.slowDownBuff.value + 0.1f);
+                                player.ReplaceSlowDownBuff(player.slowDownBuff.value + 0.5f);
                             }
                             else
                             {
