@@ -8,8 +8,7 @@ public class GameController : MonoBehaviour
     public GameObject player; // Reference to the Player GameObject
     private Systems _systems; // Reference to the Systems object that will manage all game systems
     public Joystick joystick; // Reference to the Joystick component for player input
-    public Animator _animator;
-   // private Contexts _contexts;
+
     void Start()
     {
         var contexts = Contexts.sharedInstance;

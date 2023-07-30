@@ -12,43 +12,47 @@ public static class GameComponentsLookup {
     public const int Camera = 1;
     public const int Collectible = 2;
     public const int Collision = 3;
-    public const int Damage = 4;
-    public const int DelayedDestroy = 5;
-    public const int Direction = 6;
-    public const int EnemyCmp = 7;
-    public const int Enemy = 8;
-    public const int EnemyDrops = 9;
-    public const int Gum = 10;
-    public const int GumSkill = 11;
-    public const int HasCollided = 12;
-    public const int HealthComp = 13;
-    public const int Health = 14;
-    public const int HitEnemies = 15;
-    public const int Interactive = 16;
-    public const int IsDestroyed = 17;
-    public const int IsDestryComp = 18;
-    public const int IsTargetable = 19;
-    public const int LastDamageTime = 20;
-    public const int Movable = 21;
-    public const int PlayerCmp = 22;
-    public const int Player = 23;
-    public const int Positin = 24;
-    public const int Position = 25;
-    public const int Prefab = 26;
-    public const int Rotation = 27;
-    public const int Spawn = 28;
-    public const int Speed = 29;
-    public const int Target = 30;
-    public const int Velocity = 31;
-    public const int View = 32;
+    public const int DamageBuff = 4;
+    public const int Damage = 5;
+    public const int DelayedDestroy = 6;
+    public const int Direction = 7;
+    public const int EnemyCmp = 8;
+    public const int Enemy = 9;
+    public const int EnemyDrops = 10;
+    public const int Gum = 11;
+    public const int GumSkill = 12;
+    public const int HasCollided = 13;
+    public const int HealthComp = 14;
+    public const int Health = 15;
+    public const int HitEnemies = 16;
+    public const int Interactive = 17;
+    public const int IsDestroyed = 18;
+    public const int IsDestryComp = 19;
+    public const int IsTargetable = 20;
+    public const int KnockBackBuff = 21;
+    public const int LastDamageTime = 22;
+    public const int Movable = 23;
+    public const int PlayerCmp = 24;
+    public const int Player = 25;
+    public const int Positin = 26;
+    public const int Position = 27;
+    public const int Prefab = 28;
+    public const int Rotation = 29;
+    public const int SlowDownBuff = 30;
+    public const int Spawn = 31;
+    public const int Speed = 32;
+    public const int Target = 33;
+    public const int Velocity = 34;
+    public const int View = 35;
 
-    public const int TotalComponents = 33;
+    public const int TotalComponents = 36;
 
     public static readonly string[] componentNames = {
         "BuffDrop",
         "Camera",
         "Collectible",
         "Collision",
+        "DamageBuff",
         "Damage",
         "DelayedDestroy",
         "Direction",
@@ -65,6 +69,7 @@ public static class GameComponentsLookup {
         "IsDestroyed",
         "IsDestryComp",
         "IsTargetable",
+        "KnockBackBuff",
         "LastDamageTime",
         "Movable",
         "PlayerCmp",
@@ -73,6 +78,7 @@ public static class GameComponentsLookup {
         "Position",
         "Prefab",
         "Rotation",
+        "SlowDownBuff",
         "Spawn",
         "Speed",
         "Target",
@@ -85,6 +91,7 @@ public static class GameComponentsLookup {
         typeof(CameraComponent),
         typeof(CollectibleComponent),
         typeof(CollisionComponent),
+        typeof(DamageBuffComponent),
         typeof(DamageComponent),
         typeof(DelayedDestroyComponent),
         typeof(DirectionComponent),
@@ -101,6 +108,7 @@ public static class GameComponentsLookup {
         typeof(IsDestroyedComponent),
         typeof(IsDestryComp),
         typeof(IsTargetableComponent),
+        typeof(KnockBackBuffComponent),
         typeof(LastDamageTimeComponent),
         typeof(MovableComponent),
         typeof(PlayerCmp),
@@ -109,6 +117,7 @@ public static class GameComponentsLookup {
         typeof(PositionComponent),
         typeof(PrefabComponent),
         typeof(RotationComponent),
+        typeof(SlowDownBuffComponent),
         typeof(SpawnComponent),
         typeof(SpeedComponent),
         typeof(TargetComponent),
