@@ -51,9 +51,10 @@ public class SpawnSystem : IExecuteSystem
             
             _spawnCount++;// Increment the spawn count
             
-            if (_spawnCount % 4 == 0 && _spawnInterval > 1)// If the spawn count is a multiple of 4 and the spawn interval is greater than 1
+            if (_spawnCount % 4 == 0 && _spawnInterval > 0.5f)// If the spawn count is a multiple of 4 and the spawn interval is greater than 1
             {
                 _spawnInterval -= 0.5f;  // Decrease the spawn interval by 0.5
+                Debug.Log(_spawnInterval);
             }
            
             
