@@ -7,8 +7,11 @@ public class PlayerDamageSystem : IExecuteSystem
     private IGroup<GameEntity> _players;// To hold a group of player entities
     private IGroup<GameEntity> _enemies;// To hold a group of enemy entities
     private float _damageInterval = 1f; // Damage the player every second
+    public bool isDead;
+    public bool survived;
+    private float _survivalTime = 40f;
+    private float _currentTime = 0f;
 
-    
     public PlayerDamageSystem(Contexts contexts)// Constructor for the PlayerDamageSystem class
     {
        
@@ -40,11 +43,21 @@ public class PlayerDamageSystem : IExecuteSystem
                     {
                         
                         player.ReplaceHealthComp(player.healthComp.value - enemy.damage.value);// Reduce the player's health by the enemy's damage value
-                       
+
+                        if (player.healthComp.value == 0)
+                        {
+                            isDead = true;
+                        }
                         player.ReplaceLastDamageTime(Time.time); // Update the time the player was last damaged
                     }
                 }
             }
+        }
+        _currentTime += Time.deltaTime;
+
+        if (_currentTime >= _survivalTime && !isDead)
+        {
+            survived = true;
         }
     }
 
