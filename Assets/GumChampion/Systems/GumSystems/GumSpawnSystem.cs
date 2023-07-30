@@ -3,89 +3,105 @@ using UnityEngine;
 
 public class GumSpawnSystem : IExecuteSystem
 {
-        private readonly GameContext _context;
+    private readonly GameContext _context;
     private IGroup<GameEntity> _players;
     private IGroup<GameEntity> _cameras;
+    private readonly IGroup<GameEntity> _buffdrops;
     private GameObject _gumPrefab;
     private float _spawnTimer = 0;
-    private float _spawnInterval = 1; // Spawn a frostbolt every second(it will updated)
+    private float _spawnInterval = 1; // Spawn a gum every second (it will be updated)
+    private int gumDamage = 40;
+    private float gumSlowdownAmount = 0;
+    private float gumKnockbackForce = 0;
+    private int damageBuffValue;
+    private float slowBuffValue;
+    private float knockBuffValue;
 
-    public GumSpawnSystem(Contexts contexts, GameObject gumPrefab)// System Definitions there will be as a bridge for GameController.
+    public GumSpawnSystem(Contexts contexts, GameObject gumPrefab)
     {
-        _context = contexts.game; // Set the game context, which is used to create and manage entities in the game
-        _players = _context.GetGroup(GameMatcher.Player); // Get a group of all entities that match the Player component
-        _cameras = _context.GetGroup(GameMatcher.Camera); // Get a group of all entities that match the Camera component
-        _gumPrefab = gumPrefab; // Set the frostbolt prefab, which is used to instantiate new frostbolt entities
-
+        _context = contexts.game;
+        _players = _context.GetGroup(GameMatcher.Player);
+        _cameras = _context.GetGroup(GameMatcher.Camera);
+        _buffdrops = _context.GetGroup(GameMatcher.BuffDrop);
+        _gumPrefab = gumPrefab;
     }
 
     public void Execute()
-{
-    _spawnTimer += Time.deltaTime; // Increase the spawn timer by the time passed since the last frame
-    if (_spawnTimer >= _spawnInterval) // Check if the spawn timer has reached or exceeded the spawn interval
     {
-        _spawnTimer = 0; // Reset the spawn timer
-        var player = _players.GetSingleEntity(); // Get the player entity
-        var camera = _cameras.GetSingleEntity().camera.camera; // Get the camera entity
-        if (player != null && IsEnemyInCameraView(camera)) // Check if the player exists and if there's an enemy in the camera view
+        _spawnTimer += Time.deltaTime;
+        if (_spawnTimer >= _spawnInterval)
         {
-            var gum = _context.CreateEntity(); // Create a new frostbolt entity
-            var closestEnemy = GetClosestEnemy(player.position.value); // Get the closest enemy to the player
-            gum.AddPrefab(_gumPrefab); // Add the frostbolt prefab to the frostbolt entity
-            gum.AddPosition(player.position.value); // Set the position of the frostbolt to the player's position
-            gum.AddSpeed(10f); // Set the speed of the frostbolt
-            gum.AddGum(40,0f,0f); // Add a Frostbolt component with a damage of 50
-            var frostboltGameObject = GameObject.Instantiate(gum.prefab.prefab, gum.position.value, Quaternion.identity); // Instantiate the frostbolt GameObject
-            var direction = (closestEnemy.position.value - player.position.value).normalized; // Calculate the direction towards the closest enemy
-            gum.AddDirection(direction); // Add the calculated direction to the frostbolt entity
-            gum.AddView(frostboltGameObject); // Add a View component that references the frostbolt GameObject
-            gum.isGumSkill = true; // Mark the frostbolt as a skill
-            // frostbolt.AddTarget(closestEnemy); // Add a Target component to the frostbolt (commented out)
+            _spawnTimer = 0;
+            var player = _players.GetSingleEntity();
+            var camera = _cameras.GetSingleEntity().camera.camera;
+            if (player != null && IsEnemyInCameraView(camera))
+            {
+                var gum = _context.CreateEntity();
+                if (player.hasDamageBuff)
+                {
+                    gum.AddDamageBuff(player.damageBuff.value);
+                    damageBuffValue = gum.damageBuff.value;
+                }
+                if (player.hasSlowDownBuff)
+                {
+                    gum.AddSlowDownBuff(player.slowDownBuff.value);
+                    slowBuffValue = gum.slowDownBuff.value;
+                }
+                if (player.hasKnockBackBuff)
+                {
+                    gum.AddKnockBackBuff(player.knockBackBuff.value);
+                    knockBuffValue = gum.knockBackBuff.value;
+                }
+
+                var closestEnemy = GetClosestEnemy(player.position.value);
+                gum.AddPrefab(_gumPrefab);
+                gum.AddPosition(player.position.value);
+                gum.AddSpeed(10f);
+                gum.AddGum(gumDamage + damageBuffValue, gumSlowdownAmount + slowBuffValue, gumKnockbackForce + knockBuffValue);
+                var gumGameObject = GameObject.Instantiate(gum.prefab.prefab, gum.position.value, Quaternion.identity);
+                var direction = (closestEnemy.position.value - player.position.value).normalized;
+                gum.AddDirection(direction);
+                gum.AddView(gumGameObject);
+                gum.isGumSkill = true;
+            }
         }
     }
-}
 
-   
-GameEntity GetClosestEnemy(Vector3 position) // Method to get the enemy entity that is closest to a given position
-{
-    GameEntity closestEnemy = null; // Initialize the closest enemy as null
-    float closestDistance = float.MaxValue; // Initialize the closest distance as the maximum possible float value
-
-    var enemies = _context.GetGroup(GameMatcher.Enemy).GetEntities(); // Get all enemy entities
-    foreach (var enemy in enemies) // Iterate over each enemy
+    GameEntity GetClosestEnemy(Vector3 position)
     {
-        float distance = Vector3.Distance(position, enemy.position.value); // Calculate the distance between the given position and the enemy
-        if (distance < closestDistance) // If this enemy is closer than the previous closest enemy
+        GameEntity closestEnemy = null;
+        float closestDistance = float.MaxValue;
+
+        var enemies = _context.GetGroup(GameMatcher.Enemy).GetEntities();
+        foreach (var enemy in enemies)
         {
-            closestDistance = distance; // Update the closest distance
-            closestEnemy = enemy; // Update the closest enemy
+            float distance = Vector3.Distance(position, enemy.position.value);
+            if (distance < closestDistance)
+            {
+                closestDistance = distance;
+                closestEnemy = enemy;
+            }
         }
+
+        return closestEnemy;
     }
 
-    return closestEnemy; // Return the closest enemy
-}
-
-
-private bool IsEnemyInCameraView(Camera camera)// Method to check if any enemy is in the camera's view
-
-{
-    
-    var enemies = _context.GetGroup(GameMatcher.Enemy).GetEntities();// Get all entities that match the Enemy component
-    
-    foreach (var enemy in enemies)// Iterate over each enemy
+    private bool IsEnemyInCameraView(Camera camera)
     {
-        
-        Vector3 viewportPosition = camera.WorldToViewportPoint(enemy.position.value);// Convert the enemy's world position to a viewport position
-        
-        if (viewportPosition.x >= 0 && viewportPosition.x <= 1 && 
-            viewportPosition.y >= 0 && viewportPosition.y <= 1 &&
-            viewportPosition.z >= 0)// Check if the viewport position is within the camera's view
+        var enemies = _context.GetGroup(GameMatcher.Enemy).GetEntities();
+
+        foreach (var enemy in enemies)
         {
-            
-            return true;// If the enemy is within the camera's view, return true
+            Vector3 viewportPosition = camera.WorldToViewportPoint(enemy.position.value);
+
+            if (viewportPosition.x >= 0 && viewportPosition.x <= 1 &&
+                viewportPosition.y >= 0 && viewportPosition.y <= 1 &&
+                viewportPosition.z >= 0)
+            {
+                return true;
+            }
         }
+
+        return false;
     }
-    
-    return false;// If no enemies are within the camera's view, return false
-}
 }
