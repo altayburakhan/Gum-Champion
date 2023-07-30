@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Entitas;
+using Unity.VisualScripting;
 
 public class ChaseSystem : IExecuteSystem // Chasing the player.
 {
@@ -27,7 +28,6 @@ public class ChaseSystem : IExecuteSystem // Chasing the player.
             {
                 
                 var step = e.speed.value * Time.deltaTime;// Calculate the step size based on the entity's speed and the time since the last frame
-
                 e.ReplacePosition(Vector3.MoveTowards(e.position.value, target.position.value, step));// Move the entity towards the target's position by the calculated step size
                 
             }
