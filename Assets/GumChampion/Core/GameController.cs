@@ -8,14 +8,15 @@ public class GameController : MonoBehaviour
     public GameObject player; // Reference to the Player GameObject
     private Systems _systems; // Reference to the Systems object that will manage all game systems
     public Joystick joystick; // Reference to the Joystick component for player input
-    
+    public Animator _animator;
+   // private Contexts _contexts;
     void Start()
     {
         var contexts = Contexts.sharedInstance;
         _systems = new Feature("Systems")
             .Add(new InputSystem(contexts, joystick)) // Pass the Joystick script to the InputSystem
             .Add(new MoveSystem(contexts)) // Move System that moving the character.
-            .Add(new RenderPositionSystem(contexts)) 
+            .Add(new RenderPositionSystem(contexts))
             .Add(new SpawnSystem(contexts, enemyPrefab))
             .Add(new ChaseSystem(contexts))
             .Add(new GumSpawnSystem(contexts, gumPrefab)) // Add this line
@@ -38,7 +39,8 @@ public class GameController : MonoBehaviour
         enemyEntity.AddTarget(playerEntity);
         gumEntity.isHasCollided = true;
         playerEntity.AddHealthComp(100);
-        
+        _animator = player.GetComponent<Animator>();
+
     }
     
     void Update()

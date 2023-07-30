@@ -14,11 +14,9 @@ public sealed class GumComponent : IComponent
 {
    
     public float damage;
-}
-
-public class GumTypesComponent : IComponent
-{
     public float slowdownAmount;
     public float knockbackForce;
 }
+
+
 

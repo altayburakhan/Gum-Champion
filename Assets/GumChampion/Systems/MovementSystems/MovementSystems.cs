@@ -1,5 +1,6 @@
 
 using Entitas;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class InputSystem : IExecuteSystem
@@ -7,15 +8,14 @@ public class InputSystem : IExecuteSystem
     
     private readonly InputContext _context; // Declare a private variable to hold the InputContext
     private readonly Joystick _joystick;    // Declare a private variable to hold the Joystick
-
-
+   
+    
     
     public InputSystem(Contexts contexts, Joystick joystick)  // Constructor for the InputSystem class
     {
         
         _context = contexts.ınput;  // Initialize the InputContext from the provided contexts
         _joystick = joystick;  // Initialize the Joystick from the provided joystick
-
     }
 
     

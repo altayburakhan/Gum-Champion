@@ -6,16 +6,16 @@ public class GumSpawnSystem : IExecuteSystem
         private readonly GameContext _context;
     private IGroup<GameEntity> _players;
     private IGroup<GameEntity> _cameras;
-    private GameObject _frostboltPrefab;
+    private GameObject _gumPrefab;
     private float _spawnTimer = 0;
     private float _spawnInterval = 1; // Spawn a frostbolt every second(it will updated)
 
-    public GumSpawnSystem(Contexts contexts, GameObject frostboltPrefab)// System Definitions there will be as a bridge for GameController.
+    public GumSpawnSystem(Contexts contexts, GameObject gumPrefab)// System Definitions there will be as a bridge for GameController.
     {
         _context = contexts.game; // Set the game context, which is used to create and manage entities in the game
         _players = _context.GetGroup(GameMatcher.Player); // Get a group of all entities that match the Player component
         _cameras = _context.GetGroup(GameMatcher.Camera); // Get a group of all entities that match the Camera component
-        _frostboltPrefab = frostboltPrefab; // Set the frostbolt prefab, which is used to instantiate new frostbolt entities
+        _gumPrefab = gumPrefab; // Set the frostbolt prefab, which is used to instantiate new frostbolt entities
 
     }
 
@@ -29,17 +29,17 @@ public class GumSpawnSystem : IExecuteSystem
         var camera = _cameras.GetSingleEntity().camera.camera; // Get the camera entity
         if (player != null && IsEnemyInCameraView(camera)) // Check if the player exists and if there's an enemy in the camera view
         {
-            var frostbolt = _context.CreateEntity(); // Create a new frostbolt entity
+            var gum = _context.CreateEntity(); // Create a new frostbolt entity
             var closestEnemy = GetClosestEnemy(player.position.value); // Get the closest enemy to the player
-            frostbolt.AddPrefab(_frostboltPrefab); // Add the frostbolt prefab to the frostbolt entity
-            frostbolt.AddPosition(player.position.value); // Set the position of the frostbolt to the player's position
-            frostbolt.AddSpeed(10f); // Set the speed of the frostbolt
-            frostbolt.AddGum(50); // Add a Frostbolt component with a damage of 50
-            var frostboltGameObject = GameObject.Instantiate(frostbolt.prefab.prefab, frostbolt.position.value, Quaternion.identity); // Instantiate the frostbolt GameObject
+            gum.AddPrefab(_gumPrefab); // Add the frostbolt prefab to the frostbolt entity
+            gum.AddPosition(player.position.value); // Set the position of the frostbolt to the player's position
+            gum.AddSpeed(10f); // Set the speed of the frostbolt
+            gum.AddGum(50,0f,0f); // Add a Frostbolt component with a damage of 50
+            var frostboltGameObject = GameObject.Instantiate(gum.prefab.prefab, gum.position.value, Quaternion.identity); // Instantiate the frostbolt GameObject
             var direction = (closestEnemy.position.value - player.position.value).normalized; // Calculate the direction towards the closest enemy
-            frostbolt.AddDirection(direction); // Add the calculated direction to the frostbolt entity
-            frostbolt.AddView(frostboltGameObject); // Add a View component that references the frostbolt GameObject
-            frostbolt.isGumSkill = true; // Mark the frostbolt as a skill
+            gum.AddDirection(direction); // Add the calculated direction to the frostbolt entity
+            gum.AddView(frostboltGameObject); // Add a View component that references the frostbolt GameObject
+            gum.isGumSkill = true; // Mark the frostbolt as a skill
             // frostbolt.AddTarget(closestEnemy); // Add a Target component to the frostbolt (commented out)
         }
     }
