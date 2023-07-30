@@ -11,6 +11,7 @@ public class DamageSystem : IExecuteSystem
     private readonly GameContext _context;
     private readonly float _dropChance = 0.5f; // 5% chance to drop an attribute
     private int slowAmount;
+    private float KnockbackAmount;
 
     public DamageSystem(Contexts contexts)
     {
@@ -36,7 +37,8 @@ public class DamageSystem : IExecuteSystem
                 {
                     enemy.ReplaceHealthComp(enemy.healthComp.value - gum.gum.damage);
                     enemy.ReplaceSpeed(enemy.speed.value - slowAmount);
-
+                    enemy.ReplacePosition(enemy.position.value += enemy.direction.value * KnockbackAmount);
+                    
                     if (enemy.healthComp.value <= 0)
                     {
                         float random = Random.value;
@@ -54,19 +56,7 @@ public class DamageSystem : IExecuteSystem
 
                     gum.hitEnemies.value.Add(enemy);
 
-                    // Apply the gum effect based on the gum type
-                    /*switch (gum.gum.buffType)
-                    {
-                        case BuffType.Slowdown:
-                            var speed = enemy.speed;
-                            speed.value -= gum.gum.slowdownAmount; // Decrease the enemy's speed by the specified amount
-                            break;
-
-                        // Add cases for other buff types if needed
-
-                        default:
-                            break;
-                    }*/
+                    
                 }
             }
         }
@@ -94,6 +84,12 @@ public class DamageSystem : IExecuteSystem
                                 slowAmount++;
 
                                 break;
+                        case BuffType.Knockback:
+
+                            KnockbackAmount++;
+                            
+                            break;
+                            
 
                         // Add cases for other buff types if needed
 

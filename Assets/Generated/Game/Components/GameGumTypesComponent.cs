@@ -11,17 +11,19 @@ public partial class GameEntity {
     public GumTypesComponent gumTypes { get { return (GumTypesComponent)GetComponent(GameComponentsLookup.GumTypes); } }
     public bool hasGumTypes { get { return HasComponent(GameComponentsLookup.GumTypes); } }
 
-    public void AddGumTypes(float newSlowdownAmount) {
+    public void AddGumTypes(float newSlowdownAmount, float newKnockbackForce) {
         var index = GameComponentsLookup.GumTypes;
         var component = (GumTypesComponent)CreateComponent(index, typeof(GumTypesComponent));
         component.slowdownAmount = newSlowdownAmount;
+        component.knockbackForce = newKnockbackForce;
         AddComponent(index, component);
     }
 
-    public void ReplaceGumTypes(float newSlowdownAmount) {
+    public void ReplaceGumTypes(float newSlowdownAmount, float newKnockbackForce) {
         var index = GameComponentsLookup.GumTypes;
         var component = (GumTypesComponent)CreateComponent(index, typeof(GumTypesComponent));
         component.slowdownAmount = newSlowdownAmount;
+        component.knockbackForce = newKnockbackForce;
         ReplaceComponent(index, component);
     }
 

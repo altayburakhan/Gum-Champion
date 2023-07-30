@@ -7,7 +7,6 @@ public class BuffDropComponent : IComponent
 }
 public enum BuffType
 {
-    AreaDamage,
     Knockback,
     Slowdown,
     DamageIncrease
