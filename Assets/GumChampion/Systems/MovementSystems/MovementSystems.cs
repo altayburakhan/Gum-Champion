@@ -33,18 +33,14 @@ public class MoveSystem : IExecuteSystem
 {
     
     private readonly GameContext _context;// Declare a private variable to hold the GameContext
-   
     private readonly InputContext _inputContext; // Declare a private variable to hold the InputContext
-   
     private IGroup<GameEntity> _players; // Declare a private variable to hold a group of player entities
 
    
     public MoveSystem(Contexts contexts) // Constructor for the MoveSystem class
     {
         _context = contexts.game;   // Initialize the GameContext from the provided contexts
-        
         _inputContext = contexts.ınput;// Initialize the InputContext from the provided contexts
-        
         _players = _context.GetGroup(GameMatcher.AllOf(GameMatcher.Player, GameMatcher.Position, GameMatcher.Speed));// Get a group of all entities that match the Player, Position, and Speed components
     }
 
@@ -60,14 +56,35 @@ public class MoveSystem : IExecuteSystem
            
             foreach (var e in _players.GetEntities()) // Iterate over each player entity
             {
-               
+                if (e.hasRotation)
+                {
+                    // Access the Rotation component
+                    e.view.gameObject.transform.rotation = e.rotation.direction;
+                    // Use the rotationComponent as needed
+                }
                 Vector3 newPosition = e.position.value + new Vector3(joystickInput.x, 0, joystickInput.y) * e.speed.value * Time.deltaTime; // Calculate the new position based on the joystick input, speed of the entity, and the time since the last frame
-                
                 e.ReplacePosition(newPosition);// Replace the current position of the entity with the new position
+                if (joystickInput.magnitude > 0.1f)
+                {
+                    Quaternion targetRotation = Quaternion.LookRotation(new Vector3(joystickInput.x, 0, joystickInput.y));
+                    e.ReplaceRotation(targetRotation);
+                }
+               
+               
+                    
+                   
+                
             }
+            
         }
     }
 }
+
+
+
+
+
+
 
 
 public class RenderPositionSystem : IExecuteSystem

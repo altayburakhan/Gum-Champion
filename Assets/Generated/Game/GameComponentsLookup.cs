@@ -35,13 +35,14 @@ public static class GameComponentsLookup {
     public const int Positin = 24;
     public const int Position = 25;
     public const int Prefab = 26;
-    public const int Spawn = 27;
-    public const int Speed = 28;
-    public const int Target = 29;
-    public const int Velocity = 30;
-    public const int View = 31;
+    public const int Rotation = 27;
+    public const int Spawn = 28;
+    public const int Speed = 29;
+    public const int Target = 30;
+    public const int Velocity = 31;
+    public const int View = 32;
 
-    public const int TotalComponents = 32;
+    public const int TotalComponents = 33;
 
     public static readonly string[] componentNames = {
         "BuffDrop",
@@ -71,6 +72,7 @@ public static class GameComponentsLookup {
         "Positin",
         "Position",
         "Prefab",
+        "Rotation",
         "Spawn",
         "Speed",
         "Target",
@@ -106,6 +108,7 @@ public static class GameComponentsLookup {
         typeof(PositinComponent),
         typeof(PositionComponent),
         typeof(PrefabComponent),
+        typeof(RotationComponent),
         typeof(SpawnComponent),
         typeof(SpeedComponent),
         typeof(TargetComponent),

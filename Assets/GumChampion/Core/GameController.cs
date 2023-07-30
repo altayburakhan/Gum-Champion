@@ -39,7 +39,6 @@ public class GameController : MonoBehaviour
         enemyEntity.AddTarget(playerEntity);
         gumEntity.isHasCollided = true;
         playerEntity.AddHealthComp(100);
-        _animator = player.GetComponent<Animator>();
 
     }
     
