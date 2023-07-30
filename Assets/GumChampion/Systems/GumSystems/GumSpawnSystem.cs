@@ -28,43 +28,81 @@ public class GumSpawnSystem : IExecuteSystem
 
     public void Execute()
     {
-        _spawnTimer += Time.deltaTime;
-        if (_spawnTimer >= _spawnInterval)
-        {
-            _spawnTimer = 0;
-            var player = _players.GetSingleEntity();
-            var camera = _cameras.GetSingleEntity().camera.camera;
-            if (player != null && IsEnemyInCameraView(camera))
-            {
-                var gum = _context.CreateEntity();
-                if (player.hasDamageBuff)
-                {
-                    gum.AddDamageBuff(player.damageBuff.value);
-                    damageBuffValue = gum.damageBuff.value;
-                }
-                if (player.hasSlowDownBuff)
-                {
-                    gum.AddSlowDownBuff(player.slowDownBuff.value);
-                    slowBuffValue = gum.slowDownBuff.value;
-                }
-                if (player.hasKnockBackBuff)
-                {
-                    gum.AddKnockBackBuff(player.knockBackBuff.value);
-                    knockBuffValue = gum.knockBackBuff.value;
-                }
+       _spawnTimer += Time.deltaTime;
 
-                var closestEnemy = GetClosestEnemy(player.position.value);
-                gum.AddPrefab(_gumPrefab);
-                gum.AddPosition(player.position.value);
-                gum.AddSpeed(10f);
-                gum.AddGum(gumDamage + damageBuffValue, gumSlowdownAmount + slowBuffValue, gumKnockbackForce + knockBuffValue);
-                var gumGameObject = GameObject.Instantiate(gum.prefab.prefab, gum.position.value, Quaternion.identity);
-                var direction = (closestEnemy.position.value - player.position.value).normalized;
-                gum.AddDirection(direction);
-                gum.AddView(gumGameObject);
-                gum.isGumSkill = true;
-            }
+// Check if the spawn timer has reached the spawn interval
+if (_spawnTimer >= _spawnInterval)
+{
+    _spawnTimer = 0;
+
+    // Get the player entity
+    var player = _players.GetSingleEntity();
+
+    // Get the camera entity and its associated camera component
+    var camera = _cameras.GetSingleEntity().camera.camera;
+
+    // Check if the player entity exists and if there is an enemy in the camera view
+    if (player != null && IsEnemyInCameraView(camera))
+    {
+        // Create a new gum entity
+        var gum = _context.CreateEntity();
+
+        // Check if the player has the DamageBuff component
+        if (player.hasDamageBuff)
+        {
+            // Add the DamageBuff component to the gum entity with the same value as the player's DamageBuff component
+            gum.AddDamageBuff(player.damageBuff.value);
+            damageBuffValue = gum.damageBuff.value;
         }
+
+        // Check if the player has the SlowDownBuff component
+        if (player.hasSlowDownBuff)
+        {
+            // Add the SlowDownBuff component to the gum entity with the same value as the player's SlowDownBuff component
+            gum.AddSlowDownBuff(player.slowDownBuff.value);
+            slowBuffValue = gum.slowDownBuff.value;
+        }
+
+        // Check if the player has the KnockBackBuff component
+        if (player.hasKnockBackBuff)
+        {
+            // Add the KnockBackBuff component to the gum entity with the same value as the player's KnockBackBuff component
+            gum.AddKnockBackBuff(player.knockBackBuff.value);
+            knockBuffValue = gum.knockBackBuff.value;
+        }
+
+        // Get the closest enemy to the player's position
+        var closestEnemy = GetClosestEnemy(player.position.value);
+
+        // Add the prefab component to the gum entity with the gum prefab
+        gum.AddPrefab(_gumPrefab);
+
+        // Add the position component to the gum entity with the player's position
+        gum.AddPosition(player.position.value);
+
+        // Add the speed component to the gum entity with a value of 10f
+        gum.AddSpeed(10f);
+
+        // Add the gum component to the gum entity with the gum damage, slowdown amount, and knockback force values
+        gum.AddGum(gumDamage + damageBuffValue, gumSlowdownAmount + slowBuffValue, gumKnockbackForce + knockBuffValue);
+
+        // Instantiate the gum prefab at the gum's position
+        var gumGameObject = GameObject.Instantiate(gum.prefab.prefab, gum.position.value, Quaternion.identity);
+
+        // Calculate the direction from the player to the closest enemy and normalize it
+        var direction = (closestEnemy.position.value - player.position.value).normalized;
+
+        // Add the direction component to the gum entity with the calculated direction
+        gum.AddDirection(direction);
+
+        // Add the view component to the gum entity with the instantiated gum game object
+        gum.AddView(gumGameObject);
+
+        // Set the gum entity as a gum skill entity
+        gum.isGumSkill = true;
+    }
+}
+
     }
 
     GameEntity GetClosestEnemy(Vector3 position)
