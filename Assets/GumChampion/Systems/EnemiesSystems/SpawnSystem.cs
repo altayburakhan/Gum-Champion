@@ -6,18 +6,16 @@ public class SpawnSystem : IExecuteSystem
    
     private readonly GameContext _context; // Declare a private variable to hold the GameContext
     private IGroup<GameEntity> _cameras;// Declare a private variable to hold a group of camera entities
-    private GameObject _enemyPrefab;// Declare a private variable to hold the enemy prefab
+    private GameObject[] _enemyPrefab;// Declare a private variable to hold the enemy prefab
     private float _spawnTimer = 0;// Declare a private variable to hold the spawn timer
     private float _spawnInterval = 4;// Declare a private variable to hold the spawn interval (in seconds)
     private int _spawnCount = 0;// Declare a private variable to hold the spawn count
-    private IGroup<GameEntity> _players;
     
-    public SpawnSystem(Contexts contexts, GameObject enemyPrefab)// Constructor for the SpawnSystem class
+    public SpawnSystem(Contexts contexts, GameObject[] enemyPrefab)// Constructor for the SpawnSystem class
     {
         _context = contexts.game;        // Initialize the GameContext from the provided contexts
         _cameras = _context.GetGroup(GameMatcher.Camera);// Get a group of all entities that match the Camera component
         _enemyPrefab = enemyPrefab;// Initialize the enemy prefab from the provided prefab
-        _players = _context.GetGroup(GameMatcher.AllOf(GameMatcher.Player, GameMatcher.Position, GameMatcher.Speed));
     }
 
     public void Execute()
@@ -33,11 +31,11 @@ public class SpawnSystem : IExecuteSystem
             var camera = _cameras.GetSingleEntity().camera.camera;  // Get the camera entity
             var enemy = _context.CreateEntity();  // Create a new enemy entity
             
-            enemy.AddPrefab(_enemyPrefab);// Add the enemy prefab to the enemy entity
+            enemy.AddPrefab(_enemyPrefab[Random.Range(0,_enemyPrefab.Length)]);// Add the enemy prefab to the enemy entity
             enemy.AddPosition(GetRandomPositionOutsideViewport(camera));// Add a position to the enemy entity, the position is randomly generated outside the viewport
-            enemy.AddEnemy(50, 20);// Add an Enemy component to the enemy entity with a health of 50 and damage of 10
+            enemy.AddEnemy(50, 10);// Add an Enemy component to the enemy entity with a health of 50 and damage of 10
             enemy.AddHealthComp(50);// Add a HealthComponent to the enemy entity with a health value of 50
-            enemy.AddDamage(20);// Add a DamageComponent to the enemy entity with a damage value of 10
+            enemy.AddDamage(10);// Add a DamageComponent to the enemy entity with a damage value of 10
             var enemyGameObject = GameObject.Instantiate(enemy.prefab.prefab, enemy.position.value, Quaternion.identity);// Instantiate a new GameObject from the enemy prefab at the enemy's position with no rotation
             enemy.AddView(enemyGameObject); // Add a ViewComponent that references the enemy GameObject
             enemy.AddSpeed(2f); // Add a SpeedComponent with a speed of 5
@@ -46,18 +44,15 @@ public class SpawnSystem : IExecuteSystem
             if (player != null)// If the player entity exists
             {
                 enemy.AddTarget(player);// Add a Chase component to the enemy, setting the player as the target
-               
             }
             
             _spawnCount++;// Increment the spawn count
             
-            if (_spawnCount % 4 == 0 && _spawnInterval > 0.5f)// If the spawn count is a multiple of 4 and the spawn interval is greater than 1
+            if (_spawnCount % 4 == 0 && _spawnInterval > 1)// If the spawn count is a multiple of 4 and the spawn interval is greater than 1
             {
                 _spawnInterval -= 0.5f;  // Decrease the spawn interval by 0.5
-                Debug.Log(_spawnInterval);
             }
-           
-            
+
         }
     }
     private Vector3 GetRandomPositionOutsideViewport(Camera camera)// Method to get a random position outside the viewport
@@ -70,12 +65,7 @@ public class SpawnSystem : IExecuteSystem
                 0, // Set y to 0
                 Random.Range(-20, 40)); // Adjust these values to fit your game
             
-            position = new Vector3(camera.transform.position.x, 0, camera.transform.position.z) + randomVector;// Calculate the position by adding the random vector to the camera's position
-           
-                // Access the Rotation component
-                
-                // Use the rotationComponent as needed
-            
+            position = new Vector3(camera.transform.position.x, 0f, camera.transform.position.z) + randomVector;// Calculate the position by adding the random vector to the camera's position
             
         } while (IsInsideViewport(camera, position));// Repeat the process until the position is outside the viewport
         

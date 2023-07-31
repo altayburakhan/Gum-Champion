@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class GameController : MonoBehaviour
 {
-    [SerializeField] private GameObject enemyPrefab;// Serialized field to assign the Enemy prefab in the Unity Inspector
+    [SerializeField] private GameObject[] enemyPrefabs;// Serialized field to assign the Enemy prefab in the Unity Inspector
     [SerializeField] private GameObject gumPrefab;// Serialized field to assign the Gum prefab in the Unity Inspector
     public GameObject player; // Reference to the Player GameObject
     private Systems _systems; // Reference to the Systems object that will manage all game systems
@@ -16,7 +16,7 @@ public class GameController : MonoBehaviour
             .Add(new InputSystem(contexts, joystick)) // Pass the Joystick script to the InputSystem
             .Add(new MoveSystem(contexts)) // Move System that moving the character.
             .Add(new RenderPositionSystem(contexts))
-            .Add(new SpawnSystem(contexts, enemyPrefab))
+            .Add(new SpawnSystem(contexts, enemyPrefabs))
             .Add(new ChaseSystem(contexts))
             .Add(new GumSpawnSystem(contexts, gumPrefab)) // Add this line
             .Add(new GumMoveSystem(contexts))
