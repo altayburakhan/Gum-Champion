@@ -1,4 +1,5 @@
 using Entitas;
+using TMPro;
 using UnityEngine;
 
 public class PlayerDamageSystem : IExecuteSystem
@@ -11,7 +12,7 @@ public class PlayerDamageSystem : IExecuteSystem
     public bool survived;
     private float _survivalTime = 40f;
     private float _currentTime = 0f;
-
+    private TextMeshProUGUI _survivalTimeText;
     public PlayerDamageSystem(Contexts contexts)// Constructor for the PlayerDamageSystem class
     {
        
@@ -20,13 +21,18 @@ public class PlayerDamageSystem : IExecuteSystem
         _players = _context.GetGroup(GameMatcher.Player); // Get a group of all entities that match the Player component
        
         _enemies = _context.GetGroup(GameMatcher.Enemy); // Get a group of all entities that match the Enemy component
+    
+        _survivalTimeText = GameObject.Find("SurvivalTimeText").GetComponent<TextMeshProUGUI>();
     }
 
 
     
     public void Execute()// Method to execute the system's logic
     {
-       
+        if (_survivalTimeText != null)
+        {
+            _survivalTimeText.text = _currentTime.ToString("F2");
+        }
         var player = _players.GetSingleEntity(); // Get the single player entity
     
         
@@ -47,6 +53,8 @@ public class PlayerDamageSystem : IExecuteSystem
                         if (player.healthComp.value == 0)
                         {
                             isDead = true;
+                            Time.timeScale = 0;
+                            // ui ekle
                         }
                         player.ReplaceLastDamageTime(Time.time); // Update the time the player was last damaged
                     }
@@ -58,6 +66,9 @@ public class PlayerDamageSystem : IExecuteSystem
         if (_currentTime >= _survivalTime && !isDead)
         {
             survived = true;
+            // ui ekle
+            
+
         }
     }
 

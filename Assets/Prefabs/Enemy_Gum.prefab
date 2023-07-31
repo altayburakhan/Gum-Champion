@@ -100,6 +100,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: gum2
       objectReference: {fileID: 0}
+    - target: {fileID: 8417361359673230750, guid: e31c8b20890874174b7ec1e90cdd222c,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 121af47ca6125479c810ce5efdfde19c, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

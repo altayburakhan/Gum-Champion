@@ -8,7 +8,6 @@ public class InputSystem : IExecuteSystem
     
     private readonly InputContext _context; // Declare a private variable to hold the InputContext
     private readonly Joystick _joystick;    // Declare a private variable to hold the Joystick
-   
     
     
     public InputSystem(Contexts contexts, Joystick joystick)  // Constructor for the InputSystem class
@@ -35,6 +34,7 @@ public class MoveSystem : IExecuteSystem
     private readonly GameContext _context;// Declare a private variable to hold the GameContext
     private readonly InputContext _inputContext; // Declare a private variable to hold the InputContext
     private IGroup<GameEntity> _players; // Declare a private variable to hold a group of player entities
+    private Animator _animator;
 
    
     public MoveSystem(Contexts contexts) // Constructor for the MoveSystem class
@@ -66,8 +66,23 @@ public class MoveSystem : IExecuteSystem
                 e.ReplacePosition(newPosition);// Replace the current position of the entity with the new position
                 if (joystickInput.magnitude > 0.1f)
                 {
+                    if (_animator != null)
+                    {
+                        _animator.SetBool("IsMove", true);
+                    }
+                    else
+                    {
+                        _animator = e.view.gameObject.GetComponentInChildren<Animator>();
+                    }
                     Quaternion targetRotation = Quaternion.LookRotation(new Vector3(joystickInput.x, 0, joystickInput.y));
                     e.ReplaceRotation(targetRotation);
+                }
+                else
+                {
+                    if (_animator != null)
+                    {
+                        _animator.SetBool("IsMove", false);
+                    }
                 }
                
                
